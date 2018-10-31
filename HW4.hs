@@ -26,12 +26,12 @@ associate (a, (b, c)) = ((a, b), c)
 min' :: Ord a => [a] -> a
 min' [x] = x
 min' (x:xs) | x <= head xs = min'(x: (tail xs))
-		    | x > head xs = min'((head xs): (tail xs))
+	    | x > head xs = min'((head xs): (tail xs))
 --поиск максимума в списке
 max' :: Ord a => [a] -> a
 max' [x] = x
 max' (x:xs) | x >= head xs = max'(x : (tail xs))
-			| x < head xs = max'((head xs) : (tail xs))
+	    | x < head xs = max'((head xs) : (tail xs))
 --заданная функция	
 minMax :: Ord a => [a] -> Maybe (a, a) -- (min, max)
 minMax [] = Nothing
@@ -104,4 +104,4 @@ isPalindrom :: String->Bool
 isPalindrom [] = True
 isPalindrome [x] = True
 isPalindrome (x:xs) | toLower x == toLower (last xs) = isPalindrome (init xs)
-					| otherwise = False
+		    | otherwise = False
