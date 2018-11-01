@@ -24,11 +24,11 @@ associate (a, (b, c)) = ((a, b), c)
 --FP2
 max2 :: (Ord a) => a->a->a
 max2 a b | a >= b = a
-	 | a < b = b
+	  | a < b = b
 
 min2 :: (Ord a) => a->a->a
 min2 a b | a >= b = b
-	 | a < b = a
+	  | a < b = a
 
 min_max_hof :: (Ord a) => (a->a->a)->[a] -> a
 min_max_hof f [x] = x
