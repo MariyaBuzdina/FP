@@ -22,20 +22,21 @@ associate :: (a, (b, c)) -> ((a, b), c)
 associate (a, (b, c)) = ((a, b), c)
 ------------------------------------------------------------------------------
 --FP2
---поиск минимума в списке
-min' :: Ord a => [a] -> a
-min' [x] = x
-min' (x:xs) | x <= head xs = min'(x: (tail xs))
-	    | x > head xs = min'((head xs): (tail xs))
---поиск максимума в списке
-max' :: Ord a => [a] -> a
-max' [x] = x
-max' (x:xs) | x >= head xs = max'(x : (tail xs))
-	    | x < head xs = max'((head xs) : (tail xs))
---заданная функция	
-minMax :: Ord a => [a] -> Maybe (a, a) -- (min, max)
+max2 :: (Ord a) => a->a->a
+max2 a b | a >= b = a
+	 | a < b = b
+
+min2 :: (Ord a) => a->a->a
+min2 a b | a >= b = b
+	 | a < b = a
+
+min_max_hof :: (Ord a) => (a->a->a)->[a] -> a
+min_max_hof f [x] = x
+min_max_hof f (x:xs) = f x ( min_max_hof f xs)
+
+minMax :: Ord a => [a] -> Maybe(a, a)
 minMax [] = Nothing
-minMax (x:xs) = Just(min' (x:xs), max'(x:xs))
+minMax (x:xs) = Just(min_max_hof min2 (x:xs), min_max_hof max2 (x:xs))
 ------------------------------------------------------------------------------
 --FP3
 sumANDcount :: Integer -> (Integer, Integer)
