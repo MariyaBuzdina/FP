@@ -20,6 +20,10 @@ curry_ f a b = f (a, b)
 --6)
 associate :: (a, (b, c)) -> ((a, b), c)
 associate (a, (b, c)) = ((a, b), c)
+
+
+
+
 ------------------------------------------------------------------------------
 --FP2
 max2 :: (Ord a) => a->a->a
@@ -38,6 +42,10 @@ minMax :: Ord a => [a] -> Maybe(a, a)
 minMax [] = Nothing
 minMax (x:xs) = Just(min_max_hof min2 (x:xs), min_max_hof max2 (x:xs))
 ------------------------------------------------------------------------------
+
+
+
+
 --FP3
 sumANDcount :: Integer -> (Integer, Integer)
 sumANDcount num =  helper 0 0 (abs num) 
