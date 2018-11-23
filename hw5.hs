@@ -15,7 +15,7 @@ indices xs = zip  [1..toInteger(length xs)] xs
 --2.2 "Обнуляет" элементы данного списка, неудовлетворяющие заданному условию
 --2.3
 triplewiseSum :: [Integer] -> [Integer] -> [Integer] -> [Integer]
-triplewiseSum xs ys zs = zipWith3 (\x y z-> x + y + z) xs ys zs
+triplewiseSum = zipWith3 (\xs ys zs -> xs + ys + zs)
 ----------------------------------------------------------------------
 --3 
 revRange :: (Char,Char) -> [Char]
