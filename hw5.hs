@@ -35,7 +35,7 @@ instance Ord a => Semigroup (SortedList a) where
 instance Ord a => Monoid (SortedList a) where
   mempty = SortedList []
   mappend = (<>)
---слияние отсортированных несписков
+--слияние отсортированных списков
 mergeSortedLists :: Ord a => [a] -> [a] -> [a]
 mergeSortedLists xs [] = xs
 mergeSortedLists [] ys = ys
