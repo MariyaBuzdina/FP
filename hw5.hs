@@ -13,6 +13,9 @@ cyrcShiftL n xs | n > 0 = cyrcShiftL (n-1) (tail xs)++[head xs]
 indices :: [a] -> [(Integer, a)]
 indices xs = zip  [1..toInteger(length xs)] xs 
 --2.2 "Обнуляет" элементы данного списка, неудовлетворяющие заданному условию
+zeroBy :: Monoid a => [a] -> (a -> Bool) -> [a]
+zeroBy xs if_ = map zero xs where
+	zero x = if if_ x then x else mempty
 --2.3
 triplewiseSum :: [Integer] -> [Integer] -> [Integer] -> [Integer]
 triplewiseSum = zipWith3 (\xs ys zs -> xs + ys + zs)
@@ -41,6 +44,20 @@ mergeSortedLists xs [] = xs
 mergeSortedLists [] ys = ys
 mergeSortedLists (x:xs) (y:ys) | (x <= y) = x : (mergeSortedLists xs (y:ys))
 			       | otherwise = y : (mergeSortedLists (x:xs) ys)
+----------------------------------------------------------------------
+--6
+half_1 :: [a]->[a]
+half_1 xs = take (length xs `div` 2) xs
+
+half_2 :: [a]->[a]
+half_2 xs = drop (length xs `div` 2) xs
+
+--сортировка слиянием
+msort :: Ord a => [a] -> SortedList a
+msort [] = mempty
+msort [x] = SortedList [x]
+msort xs = (msort (half_1 xs)) `mappend` (msort (half_2 xs))
+
 
 
 
