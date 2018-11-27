@@ -1,6 +1,7 @@
 import Data.Monoid 
 import Data.Char
 import Data.List
+import Data.Foldable
 
 --1
 cyrcShiftL :: Int -> [a] -> [a]
@@ -57,8 +58,65 @@ msort :: Ord a => [a] -> SortedList a
 msort [] = mempty
 msort [x] = SortedList [x]
 msort xs = (msort (half_1 xs)) `mappend` (msort (half_2 xs))
+----------------------------------------------------------------------
+--7
+data Tree a = Nil | Node (Tree a) a (Tree a) deriving (Eq, Show)
+newtype Preorder a      = PreO (Tree a)     deriving (Eq, Show)
+newtype Postorder a     = PostO (Tree a)    deriving (Eq, Show)
+newtype Levelorder a    = LevelO (Tree a)   deriving (Eq, Show)
 
+--in-order LNR 
+{--
+1. Если дерево пустое возвращаем mempty
+2. Обходим рекурсивно левое поддерево
+3. Показываем поле данных текущего узла
+4. Обходим рекурсивно правое поддерево
+--}
+instance Foldable Tree where
+	foldMap f Nil = mempty
+	foldMap f (Node left root right) = (foldMap f left) <> f root <> (foldMap f right)
 
+--pre-order (NLR)
+{--
+1. Если дерево пустое возвращаем mempty
+2. Показываем поле данных текущего узла
+3. Обходим рекурсивно левое дерево
+4. Обходим рекурсивно правое дерево
+--}
+instance Foldable Preorder where
+	foldMap f (PreO Nil) = mempty
+	foldMap f (PreO(Node left root right)) = f root <> (foldMap f (PreO left)) <> (foldMap f (PreO right))
 
+--post-order LRN
+{--
+1. Если дерево пустое возвращаем mempty
+2. Обходим рекурсивно левое поддерево
+3. Обходим рекурсивно правое поддерево
+4. Показываем поле данных текущего узла
+--}
+instance Foldable Postorder where
+	foldMap f (PostO Nil) = mempty
+	foldMap f (PostO (Node left root right)) = (foldMap f (PostO left)) <> (foldMap f (PostO right)) <> f root
 
+--level-order (обход в ширину)
+instance Foldable Levelorder where
+	foldMap f tree = fold_map f (bfs [tree]) where
+		fold_map f [] = mempty
+		fold_map f (x:xs) = f x <> fold_map f xs
 
+		bfs [] = []
+		bfs xs = map idNode xs ++ bfs(concat(map lrn xs)) where
+			idNode (LevelO (Node _ a _)) = a
+			lrn (LevelO (Node Nil _ Nil)) = []
+			lrn (LevelO (Node Nil _ r)) = [LevelO r]  
+			lrn (LevelO (Node l _ Nil)) = [LevelO l]
+			lrn (LevelO (Node l _ r)) = [LevelO l, LevelO r]
+
+  
+--tree = Node(Node(Node Nil [1] Nil) [2] (Node Nil [3] Nil)) [4] (Node(Node Nil [6] Nil) [5] (Node Nil [7] Nil))
+{--
+LNR -> [1,2,3,4,6,5,7]
+NLR -> [4,2,1,3,5,6,7]
+LRN -> [1,3,2,6,7,5,4]
+LevelO -> [4,2,5,1,3,6,7]
+--}
