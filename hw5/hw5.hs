@@ -4,15 +4,15 @@ import Data.List
 import Data.Foldable
 
 --1
-cyrcShiftL :: Int -> [a] -> [a]
-cyrcShiftL n [] = []
-cyrcShiftL 0 x = x
-cyrcShiftL n xs | n > 0 = cyrcShiftL (n-1) (tail xs)++[head xs]
-		| n < 0 = cyrcShiftL (n+1) ((last xs):(init xs))
+circShiftL :: Int -> [a] -> [a]
+circShiftL n [] = []
+circShiftL 0 x = x
+circShiftL n xs | n > 0 = circShiftL (n-1) ((tail xs)++[head xs])
+		| n < 0 = circShiftL (n+1) ((last xs):(init xs))
 ----------------------------------------------------------------------
 --2.1 По списку возвращает список пар -- (индекс, элемент)
 indices :: [a] -> [(Integer, a)]
-indices xs = zip  [1..toInteger(length xs)] xs 
+indices xs = zip  [0..] xs 
 --2.2 "Обнуляет" элементы данного списка, неудовлетворяющие заданному условию
 zeroBy :: Monoid a => [a] -> (a -> Bool) -> [a]
 zeroBy xs if_ = map zero xs where
@@ -22,10 +22,12 @@ triplewiseSum :: [Integer] -> [Integer] -> [Integer] -> [Integer]
 triplewiseSum = zipWith3 (\xs ys zs -> xs + ys + zs)
 ----------------------------------------------------------------------
 --3 
-revRange :: (Char,Char) -> [Char]
-revRange (a, b) = unfoldr g b
-  where g x | x <  a  = Nothing
-            | otherwise = Just (x, pred x)
+--'\NUL' - is minBound::Char
+revRange :: (Char,Char) -> [Char] 
+revRange = unfoldr fun 
+fun (a, b) | b < a = Nothing
+           | b == '\NUL' = Just (b, (succ a, b))
+           | otherwise = Just (b, (a, pred b))
 ----------------------------------------------------------------------
 --4
 seriesK :: Int -> [Rational]
@@ -38,14 +40,18 @@ instance Ord a => Semigroup (SortedList a) where
   SortedList xs <> SortedList ys = SortedList $ mergeSortedLists xs ys
 instance Ord a => Monoid (SortedList a) where
   mempty = SortedList []
-  mappend = (<>)
+
+----------------------------------------------------------------------
+
 --слияние отсортированных несписков
 mergeSortedLists :: Ord a => [a] -> [a] -> [a]
 mergeSortedLists xs [] = xs
 mergeSortedLists [] ys = ys
 mergeSortedLists (x:xs) (y:ys) | (x <= y) = x : (mergeSortedLists xs (y:ys))
 			       | otherwise = y : (mergeSortedLists (x:xs) ys)
+
 ----------------------------------------------------------------------
+
 --6
 half_1 :: [a]->[a]
 half_1 xs = take (length xs `div` 2) xs
