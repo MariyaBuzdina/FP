@@ -26,7 +26,7 @@ triplewiseSum = zipWith3 (\xs ys zs -> xs + ys + zs)
 revRange :: (Char,Char) -> [Char] 
 revRange = unfoldr fun 
 fun (a, b) | b < a = Nothing
-           | b == '\NUL' = Just (b, (succ a, b))
+           | minBound == b = Just (b, (succ a, b))
            | otherwise = Just (b, (a, pred b))
 ----------------------------------------------------------------------
 --4
